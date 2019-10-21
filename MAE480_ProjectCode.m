@@ -1,6 +1,7 @@
 %% MAE 480 Project
 % Sarah Nguyen
 % Michael Angeles
+% Jaycie Cleek
 
 %% Problem 1: Pitching moment coefficient for the fuselage
 clear,clc
