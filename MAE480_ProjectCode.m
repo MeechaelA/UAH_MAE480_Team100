@@ -1,7 +1,6 @@
 %% MAE 480 Project
 % Sarah Nguyen
 % Michael Angeles
-% Jaycie Cleek
 
 %% Problem 1: Pitching moment coefficient for the fuselage
 clear,clc
@@ -59,18 +58,6 @@ deuda6 = (x1_lh(2)*(1-Deda))-1;
 deuda7 = (x1_lh(3)*(1-Deda))-1;
 deuda8 = (x1_lh(4)*(1-Deda))-1;
 
-% fplot(@(x1_cre) -0.0442*x1_cre.^3 + 0.2946*x1_cre.^2 - 0.6771*x1_cre + 0.6100,'b-')
-% xlabel('$\frac{x_{1}}{c_{re}}$','Interpreter','latex','FontSize',15); ylabel('$\frac{d_{\varepsilon}}{d_{\alpha}}$','Interpreter','latex','FontSize',15)
-
-
-% ylim([0 1]); xlim([0 1])
-% fplot(@(x1_cre) -6.4815*x1_cre.^3 + 15.5556*x1_cre.^2 - 13.0833*x1_cre ...
-%            + 4.7593,'b-');
-% xlabel('$\frac{x_{1}}{c_{re}}$','Interpreter','latex','FontSize',15); ylabel('$\frac{d_{\varepsilon}}{d_{\alpha}}$','Interpreter','latex','FontSize',15)
-% hold on 
-% plot(0.166667,deuda3,'r*')
-% legend('Given Function','section 3')
-
 deuda = [deuda1;deuda2;deuda3;0;deuda5;deuda6;deuda7;deuda8];
 
 % Wing
@@ -124,30 +111,14 @@ alpha_w = @(A,mid_slope,k) (2*pi*A)/(2+sqrt((A^2*Beta^2/k^2)*(1+(tan(mid_slope)^
 %Solutions using Given Function 3-13a
 ao_theory_Main = fig3_13a(W.T_C);
 
-% ao_theory_Vert = 6.675;
-
 %Solutions using Given Function 3-13b
 ao_O_ao_theory_Main = fig3_13b(deg2rad(tan(phiTE/2)),Re)
 
 main_midcs = atan(tand(Sweep_Angle_W) - ((12-6.61)/62))
-% horz_phiTE = (10.5);      %deg
-% vert_phiTE = (8.4375);    %deg
-
-% 
-% horz_phiTE_rad = deg2main_phiTE_rad = deg2rad(11.5);rad(10.5);      %deg
-% vert_phiTE_rad = deg2rad(8.4375);    %deg
-
-% ao_O_ao_theory_Horz = 0.8846;
-% ao_O_ao_theory_Vert = 0.8991;
 
 ao_Main = ao(ao_theory_Main,ao_O_ao_theory_Main,M);
-% ao_Horz = ao(ao_theory_Horz,ao_O_ao_theory_Horz,M);
-% ao_Vert = ao(ao_theory_Vert,ao_O_ao_theory_Vert,M);
 
 k_Main = k(ao_Main);
-% k_Horz = k(ao_Horz);
-% k_Vert = k(ao_Vert);
-
 Area_Main = 605.288;    %in2
 Area_Horz = 204;       %in2
 
@@ -225,15 +196,18 @@ lift_curve_slope = aW_Main+aW_tail*(1-deg2rad(1)-de_o_da_tail)*neta*(Area_Horz/A
 
 %% Problem 5
 lt = 18.254;
-bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw)
+lt = 22.004
+bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
 
 x_cg_bar = (13.06)/cbarw;
+x_cg_bar = (32.057-30)/cbarw
 x_bar_ac_wb = 0.25;
 x_bar_a = x_cg_bar-x_bar_ac_wb;
 
-dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-deg2rad(1)-de_o_da_tail)*neta*bar_v1
+
+dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1;
 
 %% Problem 6
-N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-deg2rad(1)-de_o_da_tail)*bar_v1*neta
+N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta
 
 H = N_O - x_cg_bar
