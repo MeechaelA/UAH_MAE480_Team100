@@ -227,5 +227,25 @@ H = N_O - x_cg_bar
 
 %% Problem 1
 
+cf = 1.25;      % Chord Flap
+ct = cbar_t;    % Tail chord
+cfc = cf/ct;    % Flap Chord Factor
 
+adCLadcl = fig3_35(cfc,AR_Main);       % Use AR of the wing
+yo = (b_Horz/2)-1.5;            % outboard location (fig. 3.34)
+yi = (b_Horz/2)-8.5;            % inboard location (fig. 3.34)
+neta_o = 2*yo/b_Horz;
+neta_i = 2*yi/b_Horz;
+K_bo = fig3_36(neta_o,lambdaT);
+K_bi = fig3_36(neta_i,lambdaT);
+K_b = K_bo-K_bi;
+cld_theory = fig3_37_a(cfc,W.T_C);
+cld_cld_theory = fig3_37_b(cfc,ao_O_ao_theory_Horiz);
+cld = cld_cld_theory*cld_theory;
+Tau = (cld/ao_Horz)*adCLadcl*K_b;
+cmd = -aW_tail*bar_v1*neta*Tau     % [/rad]
+
+%% Problem 2
+
+deo = 
 
