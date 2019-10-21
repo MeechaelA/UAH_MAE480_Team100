@@ -1,7 +1,6 @@
 %% MAE 480 Project
 % Sarah Nguyen
 % Michael Angeles
-% Jaycie Cleek
 
 %% Problem 1: Pitching moment coefficient for the fuselage
 clear,clc
@@ -160,7 +159,7 @@ at = @(AR,k,midcs) ((2*pi)*AR)/(2+sqrt(((AR^2)*(Beta^2)/(k^2))*(1+(((tan(midcs))
 %Solutions using Given Function 3-13a
 ao_theory_Horz = fig3_13a(H.T_C); 
 % Solutions using Given Function 3-13c
-phiTE = fig3_13c(H.T_C)
+phiTE = fig3_13c(H.T_C,'00XX-X8')
 
 %Solutions using Given Function 3-13b
 ao_O_ao_theory_Horiz = fig3_13b((tand(phiTE/2)),Re)
@@ -197,11 +196,10 @@ lift_curve_slope = aW_Main+aW_tail*(1-deg2rad(1)-de_o_da_tail)*neta*(Area_Horz/A
 
 %% Problem 5
 lt = 18.254;
-lt = 22.004
 bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
 
 x_cg_bar = (13.06)/cbarw;
-x_cg_bar = (32.057-30)/cbarw
+
 x_bar_ac_wb = 0.25;
 x_bar_a = x_cg_bar-x_bar_ac_wb;
 
@@ -209,6 +207,25 @@ x_bar_a = x_cg_bar-x_bar_ac_wb;
 dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1;
 
 %% Problem 6
-N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta
+N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
+
+H = N_O - x_cg_bar;
+
+%% Report II
+% Move the wing and tail backwards
+lt = 22.004;                 % Distance from the Cg to the AC of the tail
+bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
+x_cg_bar = (32.057-30)/cbarw;
+x_bar_ac_wb = 0.25;
+x_bar_a = x_cg_bar-x_bar_ac_wb;
+
+
+dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
+N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
 
 H = N_O - x_cg_bar
+
+%% Problem 1
+
+
+
