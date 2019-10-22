@@ -247,5 +247,44 @@ cmd = -aW_tail*bar_v1*neta*Tau     % [/rad]
 
 %% Problem 2
 
-deo = 
+W = 5.4431084400000005;     % Weight [kg]
+rho_500 = ((1.2017-1.225)/200)*(152.4) + 1.225;      % Linear Interpolation (Back of the text)
+v = 18.288;         % Velocity at steady flight [m/s^2]
+Sw = 0.3905056706;       % Area of the wing [m^2]
+Cl = (2*W)/(rho_500*(v^2)*Sw)
+
+Clmax = 1.1;        % Given
+dcmdcl = -H;
+detrim = -0.05;     % Given [rad]
+detrim0 = detrim + (dcmdcl/cmd)*Cl
+demax = -25;        % Negative so that it produces an upward deflection (p.226)
+
+xcgf = N_O - (demax*(pi/180)-detrim0)*(cmd/Clmax)
+
+%% Problem 3
+VTH = 10;           % Given
+HVT = 2;            % Given
+bv = VTH+HVT;       % Given 
+Cvt = Ct;           % Given
+Cvr = 19;           % Given
+lambdaV = Cvt/Cvr;
+r1 = 3.2808;        % Given [in]
+Sv = (bv/2)*Cvr*(1+lambdaV);        % Vertical Tail Area
+Av = 2*bv/(Cvr*(1+lambdaV));        % Aspect Ratio
+cbarV = (2/3)*Cvr*((1+lambdaV+lambdaV^2)/1+lambdaV);
+ymac = 2*(bv/6)*(1+2*lambdaV)/(1+lambdaV);
+kv = fig3_75(bv/(2*r1))
+VTtc = 0.075;
+ao_theory_VT = fig3_13a(VTtc);       % Given t/c of VT
+phiTE_VT = fig3_13c(VTtc,'00XX-X8');
+Re = 10^6;          % Given
+%Solutions using Given Function 3-13b
+ao_O_ao_theory_VT = fig3_13b((tand(phiTE_VT/2)),Re)
+
+sweep_angle_VT = 90 - atand(15/10)
+tail_midcs_VT = atan(tand(sweep_angle_VT) - ((Cvr-Cvt)/bv))
+
+ao_VT = ao(ao_theory_VT,ao_O_ao_theory_VT,M)
+k_VT = ao_VT/(2*pi)
+av_VT = ((2*pi)*Av)/(2+sqrt(((Av^2)*(Beta^2)/(k_VT^2))*(1+(((tan(tail_midcs_VT))^2)/Beta))+4))
 
