@@ -335,25 +335,6 @@ Kn = 0.0008;    % Found from figure 3.73
 rlf = r1*10^(-6)
 % cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
 
-%% Question 5
-% Find lateral stability coefficient for the entire aircraft
-b_Tail = 10;
-Area_Tail = 52.5;
-AR = @(b,S) b^2/S;
-AR_Tail = AR(b_Tail, Area_Tail)
-
-r_gam = 0; % No dihedral angle
-
-CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
-
-K_MLambda_x = M*cosd(VT_c_2_angle)
-factor = AR_Tail/cosd(VT_c_2_angle);
-K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
-
-lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft 
-K_f = fig3_98(lf_prime_b,AR_Tail);
-
-CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
 %% Problem 4
 neta_t = neta; % From problem 5 on report 1
 neta_v = neta_t;    % Assumed based on book and Kanistras 
@@ -373,7 +354,28 @@ cld_theory_r = fig3_37_a(cfc_r,0.075);
 cld_cld_theory_r = fig3_37_b(cfc,ao_O_ao_theory_VT);
 cld_r = cld_cld_theory_r*cld_theory_r;
 Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r
-%cmd_r = -aW_tail*bar_v2*neta_v*Tau_r     % [/rad] Waiting on barV2
+
+
+
+%% Question 5
+% Find lateral stability coefficient for the entire aircraft
+b_Tail = 10;
+Area_Tail = 52.5;
+AR = @(b,S) b^2/S;
+AR_Tail = AR(b_Tail, Area_Tail)
+
+r_gam = 0; % No dihedral angle
+
+CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
+
+K_MLambda_x = M*cosd(VT_c_2_angle)
+factor = AR_Tail/cosd(VT_c_2_angle);
+K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
+
+lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft 
+K_f = fig3_98(lf_prime_b,AR_Tail);
+
+CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
 
 CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
 
