@@ -347,3 +347,6 @@ alpha = 0;
 CL_B_VT = -k_CL_B_VT*av_VT*(sidewashdynamicratio)*(Area_Tail/Area_Main)*((zv*cos(alpha)-lv*sin(alpha))/b);
 
 %% Problem 6
+zv = zw; % vertical distance between the cg and the vertical tail AC
+lv = 1; % between the cg and the vertical tail AC
+alpha = 0;
