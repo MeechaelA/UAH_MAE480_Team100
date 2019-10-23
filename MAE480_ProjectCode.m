@@ -198,7 +198,7 @@ lift_curve_slope = aW_Main+aW_tail*(1-deg2rad(1)-de_o_da_tail)*neta*(Area_Horz/A
 lt = 18.254;
 bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
 
-x_cg_bar = (13.06)/cbarw;
+x_cg_bar = (13.06)/cbarw
 
 x_bar_ac_wb = 0.25;
 x_bar_a = x_cg_bar-x_bar_ac_wb;
@@ -217,7 +217,7 @@ lt = 22.004;                 % Distance from the Cg to the AC of the tail
 bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
 x_cg_bar = (32.057-30)/cbarw;
 x_bar_ac_wb = 0.25;
-x_bar_a = x_cg_bar-x_bar_ac_wb;
+x_bar_a = -(x_cg_bar-x_bar_ac_wb);
 
 
 dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
@@ -247,10 +247,11 @@ cmd = -aW_tail*bar_v1*neta*Tau     % [/rad]
 
 %% Problem 2
 
-W = 5.4431084400000005;     % Weight [kg]
+W = 12;     % Weight [lbf]
 rho_500 = ((1.2017-1.225)/200)*(152.4) + 1.225;      % Linear Interpolation (Back of the text)
-v = 18.288;         % Velocity at steady flight [m/s^2]
-Sw = 0.3905056706;       % Area of the wing [m^2]
+rho_500 = rho_500/515.379;      % Density [slug/ft^3]
+v = 60;         % Velocity at steady flight [ft/s^2]
+Sw = 4.1825;       % Area of the wing [ft^2]
 Sw_i = 602.285;            % Area of the wing [in^2]
 Cl = (2*W)/(rho_500*(v^2)*Sw)
 
@@ -271,10 +272,11 @@ Cvr = 19;           % Given [in]
 lambdaV = Cvt/Cvr;
 r1 = 3.2808;        % Given [in]
 Sv = (bv/2)*Cvr*(1+lambdaV);        % Vertical Tail Area [in^2]
+Sw_i = 602.285;                     % Wing Reference Area [in^2]
 Av = 2*bv/(Cvr*(1+lambdaV));        % Aspect Ratio
 cbarV = (2/3)*Cvr*((1+lambdaV+lambdaV^2)/1+lambdaV);
 ymac = 2*(bv/6)*(1+2*lambdaV)/(1+lambdaV);
-kv = fig3_75(bv/(2*r1))
+kv = fig3_75(bv/(2*r1));
 VTtc = 0.075;
 ao_theory_VT = fig3_13a(VTtc);       % Given t/c of VT
 phiTE_VT = fig3_13c(VTtc,'00XX-X8');
@@ -282,16 +284,29 @@ Re = 10^6;          % Given
 %Solutions using Given Function 3-13b
 ao_O_ao_theory_VT = fig3_13b((tand(phiTE_VT/2)),Re);
 
-sweep_angle_VT = 90 - atand(15/10);
-tail_midcs_VT = atan(tand(sweep_angle_VT) - ((Cvr-Cvt)/bv));
-
+tail_LE_VT = 90 - atand(10/15);     % Found from diagram on paper
+VT_c_4_angle = atand(tand(tail_LE_VT) - (Cvr - Cvt)/(2*10));    % Quarter-chord angle (b = 10)
 ao_VT = ao(ao_theory_VT,ao_O_ao_theory_VT,M);
 k_VT = ao_VT/(2*pi);
-AVB_AV = fig3_77(bv/(2*r1),lambdaV)
-Av_eff = AVB_AV*Av
+AVB_AV = fig3_77(bv/(2*r1),lambdaV);
+Av_eff = AVB_AV*Av;
 av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(tail_midcs_VT))^2)/Beta))+4))
+zw = 0.25;
+dfmax = 4.166;      % Found in CAD
+sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/(1+cosd(VT_c_4_angle))) + (0.4*zw/dfmax) + 0.0009*Av
 
-sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/*1+cos(0.24)) + (0.4*zw/dfmax) + 0.0009*AR_Horz
+Cyb = -k_VT*av_VT*sidewashdynamicratio*(Sv/Sw_i)
+
+quarterchordpt = cbarV/4;
+% Directional Stability caused by wing sweep
+% cnb = (cnb)_w + (cnb)_bw + (cnb)_vfix
+% (cnb)_w = (cnb)_circular + (cnb)_vw
+
+cnb_vw = (Cl^2)*((1/(4*pi*AR_Main)) - (tand(VT_c_4_angle)/(pi*AR_Main*(AR_Main + 4*cosd(VT_c_4_angle))))*(cosd(VT_c_4_angle) -(AR_Main/2) - (AR_Main^2)/(8*cosd(VT_c_4_angle)) + 6*x_bar_a*sind(VT_c_4_angle)/AR_Main))
+
+Sbs = 343;         % Found by Michael on paper
+
+
 
 
 
