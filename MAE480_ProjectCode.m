@@ -48,7 +48,6 @@ unknownd= 12-cbar_t;
 
 % Find lh
 lh = (cbar_t/4)+8.25+8.75+unknownd;
-%lh = 13.08
 x1_lh = x1(5:8)/lh;
 X1_lh = [0;0;0;0;x1_lh];
 
@@ -139,7 +138,7 @@ h = 500;                  % Cruise Altitude [ft]
 Gamma = 1.4;              % Air Density  
 R = 287;                  % Ideal Gas Constant [J/kg-K]
 T = 287.1594;             % Temperature [K] - found from appendix at h = 500 ft
-HT_C = 0.080;            % Tail ratio
+H.T_C = 0.080;            % Tail ratio
 Re = 10^6;
 Cr = 12;
 Ct = 4;
@@ -158,9 +157,9 @@ k = @(ao) ao/(2*pi);
 at = @(AR,k,midcs) ((2*pi)*AR)/(2+sqrt(((AR^2)*(Beta^2)/(k^2))*(1+(((tan(midcs))^2)/Beta))+4))
 
 %Solutions using Given Function 3-13a
-ao_theory_Horz = fig3_13a(HT_C); 
+ao_theory_Horz = fig3_13a(H.T_C); 
 % Solutions using Given Function 3-13c
-phiTE = fig3_13c(HT_C,'00XX-X8')
+phiTE = fig3_13c(H.T_C,'00XX-X8')
 
 %Solutions using Given Function 3-13b
 ao_O_ao_theory_Horiz = fig3_13b((tand(phiTE/2)),Re)
@@ -213,52 +212,38 @@ N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail
 H = N_O - x_cg_bar;
 
 %% Report II
-% % Move the wing and tail backwards
-% lt = 22.004;                 % Distance from the Cg to the AC of the tail
-% bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
-% x_cg_bar = (32.057-30)/cbarw;
-% x_bar_ac_wb = 0.25;
-% x_bar_a = -(x_cg_bar-x_bar_ac_wb);
-% 
-% 
-% dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
-% N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
-% 
-% H = N_O - x_cg_bar
+% Move the wing and tail backwards
+lt = 22.004;                 % Distance from the Cg to the AC of the tail
+bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
+x_cg_bar = (32.057-30)/cbarw;
+x_bar_ac_wb = 0.25;
+x_bar_a = -(x_cg_bar-x_bar_ac_wb);
 
-% Move CG location
-N_O = 0.2265;       % From report I
-Xcg_wrtF = 19.191;
-Xcg_bar = (19-Xcg_wrtF)/cbarw;
-H = N_O - Xcg_bar;
-Xac_w = 0.25;
-x_bar_a = (Xcg_bar - Xac_w)
 
-lt = 32.139;                 % Distance from the Cg to the AC of the tail
-bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw)
+dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
+N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
+
+H = N_O - x_cg_bar
 
 %% Problem 1
 
 cf = 1.25;      % Chord Flap
 ct = cbar_t;    % Tail chord
 cfc = cf/ct;    % Flap Chord Factor
-HT_tc = 0.08;   % Horizontal tail ratio (t/c)
 
 adCLadcl = fig3_35(cfc,AR_Main);       % Use AR of the wing
 yo = (b_Horz/2)-1.5;            % outboard location (fig. 3.34)
 yi = (b_Horz/2)-8.5;            % inboard location (fig. 3.34)
-neta_o = 2*yo/b_Horz;           % Based on control surface
+neta_o = 2*yo/b_Horz;
 neta_i = 2*yi/b_Horz;
 K_bo = fig3_36(neta_o,lambdaT);
 K_bi = fig3_36(neta_i,lambdaT);
 K_b = K_bo-K_bi;
-
-cld_theory = fig3_37_a(cfc,HT_tc);
-
+cld_theory = fig3_37_a(cfc,W.T_C);
 cld_cld_theory = fig3_37_b(cfc,ao_O_ao_theory_Horiz);
 cld = cld_cld_theory*cld_theory;
 Tau = (cld/ao_Horz)*adCLadcl*K_b;
-cmd_e = -aW_tail*bar_v1*neta*Tau     % [/rad]
+cmd = -aW_tail*bar_v1*neta*Tau     % [/rad]
 
 %% Problem 2
 
@@ -273,10 +258,10 @@ Cl = (2*W)/(rho_500*(v^2)*Sw)
 Clmax = 1.1;        % Given
 dcmdcl = -H;
 detrim = -0.05;     % Given [rad]
-detrim0 = detrim + (dcmdcl/cmd_e)*Cl
-demax = 25;        % Negative so that it produces an upward deflection (p.226)
+detrim0 = detrim + (dcmdcl/cmd)*Cl
+demax = -25;        % Negative so that it produces an upward deflection (p.226)
 
-xcgf = N_O - (deg2rad(demax)-detrim0)*(cmd_e/Clmax)
+xcgf = N_O - (demax*(pi/180)-detrim0)*(cmd/Clmax)
 
 %% Problem 3
 VTH = 10;           % Given [in]
@@ -307,7 +292,7 @@ k_VT = ao_VT/(2*pi);
 AVB_AV = fig3_77(bv/(2*r1),lambdaV);
 Av_eff = AVB_AV*Av;
 av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(VT_c_4_angle))^2)/Beta))+4))
-zw = 2;
+zw = 0.25;
 dfmax = 4.166;      % Found in CAD
 sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/(1+cosd(VT_c_4_angle))) + (0.4*zw/dfmax) + 0.0009*Av
 
@@ -319,62 +304,25 @@ quarterchordpt = cbarV/4;
 % (cnb)_w = (cnb)_circular + (cnb)_vw
 
 cnb_vw = (Cl^2)*((1/(4*pi*AR_Main)) - (tand(VT_c_4_angle)/(pi*AR_Main*(AR_Main + 4*cosd(VT_c_4_angle))))*(cosd(VT_c_4_angle) -(AR_Main/2) - (AR_Main^2)/(8*cosd(VT_c_4_angle)) + 6*x_bar_a*sind(VT_c_4_angle)/AR_Main))
-cnb_w = cnb_vw
-lf = 63.75;     % Length of the fuselage
+
 Sbs = 343;         % Found by Michael on paper
-lf_Sbs = (lf^2)/Sbs
-h1 = 8.317;     % Found from CAD
-h2 = 8.067;     % Found from CAD
-sh1_h2 = sqrt(h1/h2)
-h_bfmax = 1     % Found from CAD (Total height of aircraft/ max width) = (9/9)
-xm = 19.191;    % Distance from nose to CG
-xm_lf = xm/lf
-Kn = 0.0008;    % Found from figure 3.73
-Krl = 1;        % Found from figure 3.74
-cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
-k_ = fig3_75(bv/(2*r1));        % Found from figure 3.75
-Vbar_2 = (Sv*lt)/(Sw_i*b_Main);  
-cnb_vfix = k_*av_VT*sidewashdynamicratio*Vbar_2;
-
-Cnb = cnb_w + cnb_w + cnb_vfix
-%% Problem 4
-neta_t = neta; % From problem 5 on report 1
-neta_v = neta_t;    % Assumed based on book and Kanistras 
-cf_r = 1;   % Possible to be changed *** - The width of the rudder
-ct_r = cbarV;   % Pulled from report 1 - cbar of the vertical tail
-cfc_r = cf_r/ct_r; 
-
-adCLadcl_r = fig3_35(cfc_r,AR_Main);
-yi_r = 1.5+2;  % Using fig 3.34 and adding the 2 in to the center of the fuselage
-yo_r = 7+1.5+2; % Using fig 3.34 and adding the 2 in to the center of the fuselage
-neta_i_r = (2*yi_r)/bv; 
-neta_o_r = (2*yo_r)/bv;
-K_bi_r = fig3_36(neta_i_r,lambdaV);
-K_bo_r = fig3_36(neta_o_r,lambdaV);
-K_b_r = K_bi_r + K_bo_r;
-cld_theory_r = fig3_37_a(cfc_r,0.075);
-cld_cld_theory_r = fig3_37_b(cfc,ao_O_ao_theory_VT);
-cld_r = cld_cld_theory_r*cld_theory_r;
-Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r
-
-
 
 %% Question 5
 % Find lateral stability coefficient for the entire aircraft
 b_Tail = 10;
 Area_Tail = 52.5;
 AR = @(b,S) b^2/S;
-AR_Tail = AR(b_Tail, Area_Tail)
+AR_Tail = AR(b_Tail, Area_Tail);
 
 r_gam = 0; % No dihedral angle
 
 CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
 
-K_MLambda_x = M*cosd(VT_c_2_angle)
+K_MLambda_x = M*cosd(VT_c_2_angle);
 factor = AR_Tail/cosd(VT_c_2_angle);
 K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
 
-lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft 
+lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft (NEEDS TO MOVE TO Orginal Location)
 K_f = fig3_98(lf_prime_b,AR_Tail);
 
 CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
@@ -383,10 +331,19 @@ CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
 
 K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
 
-C_lp = 1; % Assumed
+C_lp = sqrt(2)/2; % Assumed
 C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
 
-%% These parameters rely on d which need to be found once location of the wing is found
-%d = %
-%DCLB_Gamma = -0.0005*sqrt(A)*(d/b)^2
-%DCLB_zw = ((1.2*sqrt(A))/57.3)*(zw/b)*((2*d)/b)
+d= 9; % Average fuselage diameter
+DCLB_Gamma = -0.0005*sqrt(AR_Tail)*(d/b)^2;
+DCLB_zw = ((1.2*sqrt(AR_Tail))/57.3)*(zw/b)*((2*d)/b);
+
+CL_B_WB = Cl*(CLB_CL_c_2*K_MLambda*K_f+CL_B_CL_A)+(r_gam*(CL_B_Gamma*K_MGamma+DCLB_Gamma))+DCLB_zw;
+k_CL_B_VT = 0.075;
+
+zv = zw; % vertical distance between the cg and the vertical tail AC
+lv = 1; % between the cg and the vertical tail AC
+alpha = 0;
+CL_B_VT = -k_CL_B_VT*av_VT*(sidewashdynamicratio)*(Area_Tail/Area_Main)*((zv*cos(alpha)-lv*sin(alpha))/b);
+
+%% Problem 6
