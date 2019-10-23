@@ -48,6 +48,7 @@ unknownd= 12-cbar_t;
 
 % Find lh
 lh = (cbar_t/4)+8.25+8.75+unknownd;
+%lh = 13.08
 x1_lh = x1(5:8)/lh;
 X1_lh = [0;0;0;0;x1_lh];
 
@@ -138,7 +139,7 @@ h = 500;                  % Cruise Altitude [ft]
 Gamma = 1.4;              % Air Density  
 R = 287;                  % Ideal Gas Constant [J/kg-K]
 T = 287.1594;             % Temperature [K] - found from appendix at h = 500 ft
-H.T_C = 0.080;            % Tail ratio
+HT_C = 0.080;            % Tail ratio
 Re = 10^6;
 Cr = 12;
 Ct = 4;
@@ -157,9 +158,9 @@ k = @(ao) ao/(2*pi);
 at = @(AR,k,midcs) ((2*pi)*AR)/(2+sqrt(((AR^2)*(Beta^2)/(k^2))*(1+(((tan(midcs))^2)/Beta))+4))
 
 %Solutions using Given Function 3-13a
-ao_theory_Horz = fig3_13a(H.T_C); 
+ao_theory_Horz = fig3_13a(HT_C); 
 % Solutions using Given Function 3-13c
-phiTE = fig3_13c(H.T_C,'00XX-X8')
+phiTE = fig3_13c(HT_C,'00XX-X8')
 
 %Solutions using Given Function 3-13b
 ao_O_ao_theory_Horiz = fig3_13b((tand(phiTE/2)),Re)
@@ -212,18 +213,29 @@ N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail
 H = N_O - x_cg_bar;
 
 %% Report II
-% Move the wing and tail backwards
-lt = 22.004;                 % Distance from the Cg to the AC of the tail
-bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
-x_cg_bar = (32.057-30)/cbarw;
-x_bar_ac_wb = 0.25;
-x_bar_a = -(x_cg_bar-x_bar_ac_wb);
+% % Move the wing and tail backwards
+% lt = 22.004;                 % Distance from the Cg to the AC of the tail
+% bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw);
+% x_cg_bar = (32.057-30)/cbarw;
+% x_bar_ac_wb = 0.25;
+% x_bar_a = -(x_cg_bar-x_bar_ac_wb);
+% 
+% 
+% dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
+% N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
+% 
+% H = N_O - x_cg_bar
 
+% Move CG location
+N_O = 0.2265;       % From report I
+Xcg_wrtF = 19.191;
+Xcg_bar = (19-Xcg_wrtF)/cbarw;
+H = N_O - Xcg_bar;
+Xac_w = 0.25;
+x_bar_a = (Xcg_bar - Xac_w)
 
-dcm_o_da = aW_Main*x_bar_a+Cmaf-aW_tail*(1-de_o_da_tail)*neta*bar_v1
-N_O =  x_bar_ac_wb - (Cmaf/lift_curve_slope) + (aW_tail/aW_Main)*(1-de_o_da_tail)*bar_v1*neta;
-
-H = N_O - x_cg_bar
+lt = 32.139;                 % Distance from the Cg to the AC of the tail
+bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw)
 
 %% Problem 1
 
@@ -239,7 +251,7 @@ neta_i = 2*yi/b_Horz;
 K_bo = fig3_36(neta_o,lambdaT);
 K_bi = fig3_36(neta_i,lambdaT);
 K_b = K_bo-K_bi;
-cld_theory = fig3_37_a(cfc,W.T_C);
+cld_theory = fig3_37_a(cfc,0.08);
 cld_cld_theory = fig3_37_b(cfc,ao_O_ao_theory_Horiz);
 cld = cld_cld_theory*cld_theory;
 Tau = (cld/ao_Horz)*adCLadcl*K_b;
@@ -304,8 +316,12 @@ quarterchordpt = cbarV/4;
 % (cnb)_w = (cnb)_circular + (cnb)_vw
 
 cnb_vw = (Cl^2)*((1/(4*pi*AR_Main)) - (tand(VT_c_4_angle)/(pi*AR_Main*(AR_Main + 4*cosd(VT_c_4_angle))))*(cosd(VT_c_4_angle) -(AR_Main/2) - (AR_Main^2)/(8*cosd(VT_c_4_angle)) + 6*x_bar_a*sind(VT_c_4_angle)/AR_Main))
-
+cnb_w = cnb_vw
+lf = 63.75;     % Length of the fuselage
 Sbs = 343;         % Found by Michael on paper
+lf_Sbs = (lf^2)/Sbs
+
+% cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
 
 %% Question 5
 % Find lateral stability coefficient for the entire aircraft
