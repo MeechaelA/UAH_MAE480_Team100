@@ -386,7 +386,41 @@ K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
 C_lp = 1; % Assumed
 C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
 
-%% These parameters rely on d which need to be found once location of the wing is found
-%d = %
-%DCLB_Gamma = -0.0005*sqrt(A)*(d/b)^2
-%DCLB_zw = ((1.2*sqrt(A))/57.3)*(zw/b)*((2*d)/b)
+%% Question 5
+% Find lateral stability coefficient for the entire aircraft
+b_Tail = 10;
+Area_Tail = 52.5;
+AR = @(b,S) b^2/S;
+AR_Tail = AR(b_Tail, Area_Tail);
+
+r_gam = 0; % No dihedral angle
+
+CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
+
+K_MLambda_x = M*cosd(VT_c_2_angle);
+factor = AR_Tail/cosd(VT_c_2_angle);
+K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
+
+lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft (NEEDS TO MOVE TO Orginal Location)
+K_f = fig3_98(lf_prime_b,AR_Tail);
+
+CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
+
+CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
+
+K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
+
+C_lp = sqrt(2)/2; % Assumed
+C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
+
+d= 9; % Average fuselage diameter
+DCLB_Gamma = -0.0005*sqrt(AR_Tail)*(d/b)^2;
+DCLB_zw = ((1.2*sqrt(AR_Tail))/57.3)*(zw/b)*((2*d)/b);
+
+CL_B_WB = Cl*(CLB_CL_c_2*K_MLambda*K_f+CL_B_CL_A)+(r_gam*(CL_B_Gamma*K_MGamma+DCLB_Gamma))+DCLB_zw;
+k_CL_B_VT = 0.075;
+
+zv = zw; % vertical distance between the cg and the vertical tail AC
+lv = 1; % between the cg and the vertical tail AC
+alpha = 0;
+CL_B_VT = -k_CL_B_VT*av_VT*(sidewashdynamicratio)*(Area_Tail/Area_Main)*((zv*cos(alpha)-lv*sin(alpha))/b);
