@@ -383,7 +383,6 @@ CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
 K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
 
 C_lp = sqrt(2)/2; % Assumed
-C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
 
 d= 9; % Average fuselage diameter
 DCLB_Gamma = -0.0005*sqrt(AR_Tail)*(d/b)^2;
@@ -419,8 +418,3 @@ cld_theory_w = fig3_37_a(cfc_w,tc_w);
 cld_cld_theory_w = fig3_37_b(cfc_w,ao_O_ao_theory_Main);
 cld_w = cld_cld_theory_w*cld_theory_w;
 Tau_a = (cld_w/ao_Main)*adCLadcl_w*K_b_w;
-
-%% Problem 6
-zv = zw; % vertical distance between the cg and the vertical tail AC
-lv = 1; % between the cg and the vertical tail AC
-alpha = 0;
