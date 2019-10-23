@@ -273,12 +273,10 @@ Cl = (2*W)/(rho_500*(v^2)*Sw)
 Clmax = 1.1;        % Given
 dcmdcl = -H;
 detrim = -0.05;     % Given [rad]
-detrim0 = detrim + (dcmdcl/cmd)*Cl
+detrim0 = detrim + (dcmdcl/cmd_e)*Cl
 demax = 25;        % Negative so that it produces an upward deflection (p.226)
 
-
 xcgf = N_O - (deg2rad(demax)-detrim0)*(cmd_e/Clmax)
-
 
 %% Problem 3
 VTH = 10;           % Given [in]
@@ -309,7 +307,7 @@ k_VT = ao_VT/(2*pi);
 AVB_AV = fig3_77(bv/(2*r1),lambdaV);
 Av_eff = AVB_AV*Av;
 av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(VT_c_4_angle))^2)/Beta))+4))
-zw = 0.25;
+zw = 2;
 dfmax = 4.166;      % Found in CAD
 sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/(1+cosd(VT_c_4_angle))) + (0.4*zw/dfmax) + 0.0009*Av
 
@@ -332,9 +330,13 @@ h_bfmax = 1     % Found from CAD (Total height of aircraft/ max width) = (9/9)
 xm = 19.191;    % Distance from nose to CG
 xm_lf = xm/lf
 Kn = 0.0008;    % Found from figure 3.73
-rlf = r1*10^(-6)
-% cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
+Krl = 1;        % Found from figure 3.74
+cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
+k_ = fig3_75(bv/(2*r1));        % Found from figure 3.75
+Vbar_2 = (Sv*lt)/(Sw_i*b_Main);  
+cnb_vfix = k_*av_VT*sidewashdynamicratio*Vbar_2;
 
+Cnb = cnb_w + cnb_w + cnb_vfix
 %% Problem 4
 neta_t = neta; % From problem 5 on report 1
 neta_v = neta_t;    % Assumed based on book and Kanistras 
