@@ -273,8 +273,9 @@ Cl = (2*W)/(rho_500*(v^2)*Sw)
 Clmax = 1.1;        % Given
 dcmdcl = -H;
 detrim = -0.05;     % Given [rad]
-detrim0 = detrim + (dcmdcl/cmd_e)*Cl
-demax = -25;        % Negative so that it produces an upward deflection (p.226)
+detrim0 = detrim + (dcmdcl/cmd)*Cl
+demax = 25;        % Negative so that it produces an upward deflection (p.226)
+
 
 xcgf = N_O - (deg2rad(demax)-detrim0)*(cmd_e/Clmax)
 
@@ -324,7 +325,14 @@ cnb_w = cnb_vw
 lf = 63.75;     % Length of the fuselage
 Sbs = 343;         % Found by Michael on paper
 lf_Sbs = (lf^2)/Sbs
-
+h1 = 8.317;     % Found from CAD
+h2 = 8.067;     % Found from CAD
+sh1_h2 = sqrt(h1/h2)
+h_bfmax = 1     % Found from CAD (Total height of aircraft/ max width) = (9/9)
+xm = 19.191;    % Distance from nose to CG
+xm_lf = xm/lf
+Kn = 0.0008;    % Found from figure 3.73
+rlf = r1*10^(-6)
 % cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
 
 %% Question 5
@@ -346,7 +354,6 @@ lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to 
 K_f = fig3_98(lf_prime_b,AR_Tail);
 
 CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
-=======
 %% Problem 4
 neta_t = neta; % From problem 5 on report 1
 neta_v = neta_t;    % Assumed based on book and Kanistras 
