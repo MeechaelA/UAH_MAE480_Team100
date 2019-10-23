@@ -286,11 +286,12 @@ ao_O_ao_theory_VT = fig3_13b((tand(phiTE_VT/2)),Re);
 
 tail_LE_VT = 90 - atand(10/15);     % Found from diagram on paper
 VT_c_4_angle = atand(tand(tail_LE_VT) - (Cvr - Cvt)/(2*10));    % Quarter-chord angle (b = 10)
+VT_c_2_angle = atand(tand(tail_LE_VT) - (Cvr - Cvt)/(10));    % Half-chord angle (b = 10)
 ao_VT = ao(ao_theory_VT,ao_O_ao_theory_VT,M);
 k_VT = ao_VT/(2*pi);
 AVB_AV = fig3_77(bv/(2*r1),lambdaV);
 Av_eff = AVB_AV*Av;
-av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(tail_midcs_VT))^2)/Beta))+4))
+av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(VT_c_4_angle))^2)/Beta))+4))
 zw = 0.25;
 dfmax = 4.166;      % Found in CAD
 sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/(1+cosd(VT_c_4_angle))) + (0.4*zw/dfmax) + 0.0009*Av
@@ -305,8 +306,35 @@ quarterchordpt = cbarV/4;
 cnb_vw = (Cl^2)*((1/(4*pi*AR_Main)) - (tand(VT_c_4_angle)/(pi*AR_Main*(AR_Main + 4*cosd(VT_c_4_angle))))*(cosd(VT_c_4_angle) -(AR_Main/2) - (AR_Main^2)/(8*cosd(VT_c_4_angle)) + 6*x_bar_a*sind(VT_c_4_angle)/AR_Main))
 
 Sbs = 343;         % Found by Michael on paper
-s =2
 
+%% Question 5
+% Find lateral stability coefficient for the entire aircraft
+b_Tail = 10;
+Area_Tail = 52.5;
+AR = @(b,S) b^2/S;
+AR_Tail = AR(b_Tail, Area_Tail)
 
+r_gam = 0; % No dihedral angle
 
+CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
 
+K_MLambda_x = M*cosd(VT_c_2_angle)
+factor = AR_Tail/cosd(VT_c_2_angle);
+K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
+
+lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft 
+K_f = fig3_98(lf_prime_b,AR_Tail);
+
+CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
+
+CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
+
+K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
+
+C_lp = 1; % Assumed
+C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
+
+%% These parameters rely on d which need to be found once location of the wing is found
+%d = %
+%DCLB_Gamma = -0.0005*sqrt(A)*(d/b)^2
+%DCLB_zw = ((1.2*sqrt(A))/57.3)*(zw/b)*((2*d)/b)
