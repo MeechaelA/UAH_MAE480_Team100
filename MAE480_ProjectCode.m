@@ -358,8 +358,6 @@ cld_cld_theory_r = fig3_37_b(cfc,ao_O_ao_theory_VT);
 cld_r = cld_cld_theory_r*cld_theory_r;
 Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r
 
-
-
 %% Question 5
 % Find lateral stability coefficient for the entire aircraft
 b_Tail = 10;
