@@ -242,20 +242,23 @@ bar_v1 = (Area_Horz*lt)/(Area_Main*cbarw)
 cf = 1.25;      % Chord Flap
 ct = cbar_t;    % Tail chord
 cfc = cf/ct;    % Flap Chord Factor
+HT_tc = 0.08;   % Horizontal tail ratio (t/c)
 
 adCLadcl = fig3_35(cfc,AR_Main);       % Use AR of the wing
 yo = (b_Horz/2)-1.5;            % outboard location (fig. 3.34)
 yi = (b_Horz/2)-8.5;            % inboard location (fig. 3.34)
-neta_o = 2*yo/b_Horz;
+neta_o = 2*yo/b_Horz;           % Based on control surface
 neta_i = 2*yi/b_Horz;
 K_bo = fig3_36(neta_o,lambdaT);
 K_bi = fig3_36(neta_i,lambdaT);
 K_b = K_bo-K_bi;
-cld_theory = fig3_37_a(cfc,0.08);
+
+cld_theory = fig3_37_a(cfc,HT_tc);
+
 cld_cld_theory = fig3_37_b(cfc,ao_O_ao_theory_Horiz);
 cld = cld_cld_theory*cld_theory;
 Tau = (cld/ao_Horz)*adCLadcl*K_b;
-cmd = -aW_tail*bar_v1*neta*Tau     % [/rad]
+cmd_e = -aW_tail*bar_v1*neta*Tau     % [/rad]
 
 %% Problem 2
 
@@ -270,10 +273,11 @@ Cl = (2*W)/(rho_500*(v^2)*Sw)
 Clmax = 1.1;        % Given
 dcmdcl = -H;
 detrim = -0.05;     % Given [rad]
-detrim0 = detrim + (dcmdcl/cmd)*Cl
+detrim0 = detrim + (dcmdcl/cmd_e)*Cl
 demax = -25;        % Negative so that it produces an upward deflection (p.226)
 
-xcgf = N_O - (demax*(pi/180)-detrim0)*(cmd/Clmax)
+xcgf = N_O - (deg2rad(demax)-detrim0)*(cmd_e/Clmax)
+
 
 %% Problem 3
 VTH = 10;           % Given [in]
@@ -342,6 +346,27 @@ lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to 
 K_f = fig3_98(lf_prime_b,AR_Tail);
 
 CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
+=======
+%% Problem 4
+neta_t = neta; % From problem 5 on report 1
+neta_v = neta_t;    % Assumed based on book and Kanistras 
+cf_r = 1;   % Possible to be changed *** - The width of the rudder
+ct_r = cbarV;   % Pulled from report 1 - cbar of the vertical tail
+cfc_r = cf_r/ct_r; 
+
+adCLadcl_r = fig3_35(cfc_r,AR_Main);
+yi_r = 1.5+2;  % Using fig 3.34 and adding the 2 in to the center of the fuselage
+yo_r = 7+1.5+2; % Using fig 3.34 and adding the 2 in to the center of the fuselage
+neta_i_r = (2*yi_r)/bv; 
+neta_o_r = (2*yo_r)/bv;
+K_bi_r = fig3_36(neta_i_r,lambdaV);
+K_bo_r = fig3_36(neta_o_r,lambdaV);
+K_b_r = K_bi_r + K_bo_r;
+cld_theory_r = fig3_37_a(cfc_r,0.075);
+cld_cld_theory_r = fig3_37_b(cfc,ao_O_ao_theory_VT);
+cld_r = cld_cld_theory_r*cld_theory_r;
+Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r
+%cmd_r = -aW_tail*bar_v2*neta_v*Tau_r     % [/rad] Waiting on barV2
 
 CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
 
