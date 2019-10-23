@@ -271,7 +271,7 @@ Clmax = 1.1;        % Given
 dcmdcl = -H;
 detrim = -0.05;     % Given [rad]
 detrim0 = detrim + (dcmdcl/cmd)*Cl
-demax = -25;        % Negative so that it produces an upward deflection (p.226)
+demax = 25;        % Negative so that it produces an upward deflection (p.226)
 
 xcgf = N_O - (demax*(pi/180)-detrim0)*(cmd/Clmax)
 
@@ -319,7 +319,14 @@ cnb_w = cnb_vw
 lf = 63.75;     % Length of the fuselage
 Sbs = 343;         % Found by Michael on paper
 lf_Sbs = (lf^2)/Sbs
-
+h1 = 8.317;     % Found from CAD
+h2 = 8.067;     % Found from CAD
+sh1_h2 = sqrt(h1/h2)
+h_bfmax = 1     % Found from CAD (Total height of aircraft/ max width) = (9/9)
+xm = 19.191;    % Distance from nose to CG
+xm_lf = xm/lf
+Kn = 0.0008;    % Found from figure 3.73
+rlf = r1*10^(-6)
 % cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
 
 
