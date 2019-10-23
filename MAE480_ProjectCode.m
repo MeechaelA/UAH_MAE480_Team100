@@ -305,7 +305,7 @@ quarterchordpt = cbarV/4;
 cnb_vw = (Cl^2)*((1/(4*pi*AR_Main)) - (tand(VT_c_4_angle)/(pi*AR_Main*(AR_Main + 4*cosd(VT_c_4_angle))))*(cosd(VT_c_4_angle) -(AR_Main/2) - (AR_Main^2)/(8*cosd(VT_c_4_angle)) + 6*x_bar_a*sind(VT_c_4_angle)/AR_Main))
 
 Sbs = 343;         % Found by Michael on paper
-
+s =2
 
 
 
