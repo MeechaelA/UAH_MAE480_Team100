@@ -1,7 +1,6 @@
 %% MAE 480 Project
 % Sarah Nguyen
 % Michael Angeles
-% Jaycie Cleek
 
 %% Problem 1: Pitching moment coefficient for the fuselage
 clear,clc
@@ -358,32 +357,31 @@ neta_i_r = (yi_r)/bv;
 neta_o_r = (yo_r)/bv;
 K_bi_r = fig3_36(neta_i_r,lambdaV);
 K_bo_r = fig3_36(neta_o_r,lambdaV);
-K_b_r = K_bo_r - K_bi_r
-cld_theory_r = fig3_37_a(cfc_r,0.075) %0.075 is the t/c of the vertical tail
+K_b_r = K_bo_r - K_bi_r;
+cld_theory_r = fig3_37_a(cfc_r,0.075); %0.075 is the t/c of the vertical tail
 cld_cld_theory_r = fig3_37_b(cfc_r,ao_O_ao_theory_VT);
 cld_r = cld_cld_theory_r*cld_theory_r;
-Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r
+Tau_r = (cld_r/ao_VT)*adCLadcl_r*K_b_r;
 
 % Calculate Cndr with values from Problem 3
-
-
+cnd_r = -k_*neta_v*Vbar_2*av_VT*Tau_r
 
 %% Question 5
 % Find lateral stability coefficient for the entire aircraft
 b_Tail = 10;
 Area_Tail = 52.5;
 AR = @(b,S) b^2/S;
-AR_Tail = AR(b_Tail, Area_Tail)
+AR_Tail = AR(b_Tail, Area_Tail);
 
 r_gam = 0; % No dihedral angle
 
 CLB_CL_c_2 = fig3_96(VT_c_2_angle,AR_Tail);
 
-K_MLambda_x = M*cosd(VT_c_2_angle)
+K_MLambda_x = M*cosd(VT_c_2_angle);
 factor = AR_Tail/cosd(VT_c_2_angle);
 K_MLambda = fig3_97(K_MLambda_x,factor) %Code says A_cosc2, but figure uses Aspect Ratio
 
-lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft 
+lf_prime_b = 56.25/b_Tail; %Measurement to half chord point on vertical tail to tip of the aircraft (NEEDS TO MOVE TO Orginal Location)
 K_f = fig3_98(lf_prime_b,AR_Tail);
 
 CL_B_CL_A = fig3_99(AR_Tail,lambdaV); % Per degree? all the others weren't
@@ -392,14 +390,21 @@ CL_B_Gamma = fig3_100(AR_Tail, VT_c_2_angle);
 
 K_MGamma = fig3_101(K_MLambda_x,AR_Tail);
 
-C_lp = 1; % Assumed
-C_LB_Gamma = (2/57.3^2)*((1+2*lambdaV)/(1+3*lambdaV))*C_lp; % Uses roll damping parameter
+C_lp = sqrt(2)/2; % Assumed
 
-%% These parameters rely on d which need to be found once location of the wing is found
-%d = %
-%DCLB_Gamma = -0.0005*sqrt(A)*(d/b)^2
-%DCLB_zw = ((1.2*sqrt(A))/57.3)*(zw/b)*((2*d)/b)
+d= 9; % Average fuselage diameter
+DCLB_Gamma = -0.0005*sqrt(AR_Tail)*(d/b)^2;
+DCLB_zw = ((1.2*sqrt(AR_Tail))/57.3)*(zw/b)*((2*d)/b);
 
+CL_B_WB = Cl*(CLB_CL_c_2*K_MLambda*K_f+CL_B_CL_A)+(r_gam*(CL_B_Gamma*K_MGamma+DCLB_Gamma))+DCLB_zw;
+k_CL_B_VT = 0.075;
+
+zv = zw; % vertical distance between the cg and the vertical tail AC
+lv = lt; % between the cg and the vertical tail AC
+alpha = 0;
+CL_B_VT = -k_CL_B_VT*av_VT*(sidewashdynamicratio)*(Area_Tail/Area_Main)*((zv*cos(alpha)-lv*sin(alpha))/b);
+
+CLB = CL_B_WB + CL_B_VT
 %% Problem 6 
 
 % Finding Tau_a
@@ -415,13 +420,13 @@ neta_o_w = 2*yo_w/b_Main;           % Based on control surface
 neta_i_w = 2*yi_w/b_Main;
 K_bo_w = fig3_36(neta_o_w,lambdaw);
 K_bi_w = fig3_36(neta_i_w,lambdaw);
-K_b_w = K_bo_w - K_bi_w
+K_b_w = K_bo_w - K_bi_w;
 
 cld_theory_w = fig3_37_a(cfc_w,tc_w);
 
 cld_cld_theory_w = fig3_37_b(cfc_w,ao_O_ao_theory_Main);
 cld_w = cld_cld_theory_w*cld_theory_w;
-Tau_a = (cld_w/ao_Main)*adCLadcl_w*K_b_w
+Tau_a = (cld_w/ao_Main)*adCLadcl_w*K_b_w;
 
 % Solving for the Integral 
 c_yy = @(y) (y^2)/2 + (2/3)*((lambdaw-1)/b_Main)*y^3;
