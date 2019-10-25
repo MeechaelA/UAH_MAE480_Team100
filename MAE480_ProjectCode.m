@@ -267,7 +267,7 @@ rho_500 = ((1.2017-1.225)/200)*(152.4) + 1.225;      % Linear Interpolation (Bac
 rho_500 = rho_500/515.379;      % Density [slug/ft^3]
 v = 60;         % Velocity at steady flight [ft/s^2]
 Sw = 4.1825;       % Area of the wing [ft^2]
-Sw_i = 602.285;            % Area of the wing [in^2]
+\delta_{e,0}Sw_i = 602.285;            % Area of the wing [in^2]
 Cl = (2*W)/(rho_500*(v^2)*Sw)
 
 Clmax = 1.1;        % Given
@@ -307,12 +307,12 @@ ao_VT = ao(ao_theory_VT,ao_O_ao_theory_VT,M);
 k_VT = ao_VT/(2*pi);
 AVB_AV = fig3_77(bv/(2*r1),lambdaV);
 Av_eff = AVB_AV*Av;
-av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(k_VT^2))*(1+(((tan(VT_c_4_angle))^2)/Beta))+4))
+av_VT = ((2*pi)*Av_eff)/(2+sqrt(((Av_eff^2)*(Beta^2)/(kv^2))*(1+(((tan(VT_c_4_angle))^2)/Beta))+4))
 zw = 2;
 dfmax = 4.166;      % Found in CAD
 sidewashdynamicratio = 0.724 + (3.06*(Sv/Sw_i)/(1+cosd(VT_c_4_angle))) + (0.4*zw/dfmax) + 0.0009*Av
 
-Cyb = -k_VT*av_VT*sidewashdynamicratio*(Sv/Sw_i)
+Cyb = -kv*av_VT*sidewashdynamicratio*(Sv/Sw_i)
 
 quarterchordpt = cbarV/4;
 % Directional Stability caused by wing sweep
@@ -328,7 +328,7 @@ h1 = 8.317;     % Found from CAD
 h2 = 8.067;     % Found from CAD
 sh1_h2 = sqrt(h1/h2)
 h_bfmax = 1     % Found from CAD (Total height of aircraft/ max width) = (9/9)
-xm = 19.191;    % Distance from nose to CG
+xm = 21.104;    % Distance from nose to CG
 xm_lf = xm/lf
 Kn = 0.0008;    % Found from figure 3.73
 Krl = 1;        % Found from figure 3.74
@@ -337,10 +337,7 @@ k_ = fig3_75(bv/(2*r1));        % Found from figure 3.75
 Vbar_2 = (Sv*lt)/(Sw_i*b_Main);  
 cnb_vfix = k_*av_VT*sidewashdynamicratio*Vbar_2;
 
-Cnb = cnb_w + cnb_w + cnb_vfix
-
-
-
+Cnb = cnb_w + cnb_bw + cnb_vfix
 
 %% Problem 4
 neta_t = neta; % From problem 5 on report 1
