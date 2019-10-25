@@ -332,7 +332,7 @@ xm = 21.104;    % Distance from nose to CG
 xm_lf = xm/lf
 Kn = 0.0008;    % Found from figure 3.73
 Krl = 1;        % Found from figure 3.74
-cnb_bw = -Kn*Krl*(Sbs/Sw_i)*(lf/10)         % b = 10
+cnb_bw = (-Kn*Krl*(Sbs/Sw_i)*(lf/12))*(180/pi)         % b = 10
 k_ = fig3_75(bv/(2*r1));        % Found from figure 3.75
 Vbar_2 = (Sv*lt)/(Sw_i*b_Main);  
 cnb_vfix = k_*av_VT*sidewashdynamicratio*Vbar_2;
