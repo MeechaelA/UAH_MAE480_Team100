@@ -267,7 +267,7 @@ rho_500 = ((1.2017-1.225)/200)*(152.4) + 1.225;      % Linear Interpolation (Bac
 rho_500 = rho_500/515.379;      % Density [slug/ft^3]
 v = 60;         % Velocity at steady flight [ft/s^2]
 Sw = 4.1825;       % Area of the wing [ft^2]
-\delta_{e,0}Sw_i = 602.285;            % Area of the wing [in^2]
+Sw_i = 602.285;            % Area of the wing [in^2]
 Cl = (2*W)/(rho_500*(v^2)*Sw)
 
 Clmax = 1.1;        % Given
