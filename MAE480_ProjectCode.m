@@ -284,7 +284,7 @@ VTH = 10;           % Given [in]
 HVT = 2;            % Given [in]
 bv = VTH+HVT;       % Given [in]
 Cvt = Ct;           % Given [in]
-Cvr = 19;           % Given [in]
+Cvr = 22;           % Modified to the CAD [in]
 lambdaV = Cvt/Cvr;
 r1 = 3.2808;        % Given [in]
 Sv = (bv/2)*Cvr*(1+lambdaV);        % Vertical Tail Area [in^2]
@@ -301,8 +301,8 @@ Re = 10^6;          % Given
 ao_O_ao_theory_VT = fig3_13b((tand(phiTE_VT/2)),Re);
 
 tail_LE_VT = 90 - atand(10/15);     % Found from diagram on paper
-VT_c_4_angle = atand(tand(tail_LE_VT) - (Cvr - Cvt)/(2*10));    % Quarter-chord angle (b = 10)
-VT_c_2_angle = atand(tand(tail_LE_VT) - (Cvr - Cvt)/(10));    % Half-chord angle (b = 10)
+VT_c_4_angle = 48.37;     % quarter chord sweep [deg]
+VT_c_2_angle = 36.38;     % midchord sweep [deg]
 ao_VT = ao(ao_theory_VT,ao_O_ao_theory_VT,M);
 k_VT = ao_VT/(2*pi);
 AVB_AV = fig3_77(bv/(2*r1),lambdaV);
